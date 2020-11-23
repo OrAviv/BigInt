@@ -29,12 +29,12 @@ public class BigInt implements Comparable
 //        Private constructor doing noting - for inner use.
     }
 
-    public BigInt plus(BigInt plusi)
+    public BigInt plus(BigInt addend)
     {
-        if (this.get_sign() == NEGATIVE && plusi.get_sign() == POSITIVE)
-            return plusi.private_plus(this);
-        if (this.get_sign() == POSITIVE && plusi.get_sign() == NEGATIVE)
-            return this.private_plus(plusi);
+        if (this.get_sign() == NEGATIVE && addend.get_sign() == POSITIVE)
+            return addend.private_plus(this);
+        if (this.get_sign() == POSITIVE && addend.get_sign() == NEGATIVE)
+            return this.private_plus(addend);
 
         int first;
         int second;
@@ -42,15 +42,15 @@ public class BigInt implements Comparable
         int carry = 0;
         BigInt int_to_return = new BigInt();
 
-        int max_size = Math.max(this.number.size(), plusi.number.size());
+        int max_size = Math.max(this.number.size(), addend.number.size());
         for (int i=0; i<max_size; i++)
         {
             if (i < this.number.size())
                 first = this.number.get(i);
             else
                 first = 0;
-            if (i < plusi.number.size())
-                second = plusi.number.get(i);
+            if (i < addend.number.size())
+                second = addend.number.get(i);
             else
                 second = 0;
             sum = first + second + carry;
@@ -71,37 +71,37 @@ public class BigInt implements Comparable
         return int_to_return;
     }
 
-    private BigInt private_plus(BigInt plusi)
+    private BigInt private_plus(BigInt addend)
     {
-        plusi.sign = POSITIVE;
-        BigInt int_to_return = this.minus(plusi);
-        plusi.sign = NEGATIVE;
-        this.calculate_sign(plusi, int_to_return);
+        addend.sign = POSITIVE;
+        BigInt int_to_return = this.minus(addend);
+        addend.sign = NEGATIVE;
+        this.calculate_sign(addend, int_to_return);
         return int_to_return;
     }
 
 
-    public BigInt minus(BigInt minu)
+    public BigInt minus(BigInt subtract)
     {
-        if (this.get_sign() == POSITIVE && minu.get_sign() == NEGATIVE)
-            return this.private_minus(minu);
-        if (this.get_sign() == NEGATIVE && minu.get_sign() == POSITIVE)
-            return minu.private_minus(this);
+        if (this.get_sign() == POSITIVE && subtract.get_sign() == NEGATIVE)
+            return this.private_minus(subtract);
+        if (this.get_sign() == NEGATIVE && subtract.get_sign() == POSITIVE)
+            return subtract.private_minus(this);
 
         int first;
         int second;
         int sum;
         BigInt int_to_return = new BigInt();
 
-        int max_size = Math.max(this.number.size(), minu.number.size());
+        int max_size = Math.max(this.number.size(), subtract.number.size());
         for (int i=0; i<max_size; i++)
         {
             if (i < this.number.size())
                 first = this.number.get(i);
             else
                 first = 1;
-            if (i < minu.number.size())
-                second = minu.number.get(i);
+            if (i < subtract.number.size())
+                second = subtract.number.get(i);
             else
                 second = 1;
             sum = first - second;
@@ -111,7 +111,7 @@ public class BigInt implements Comparable
         }
         for (int i=int_to_return.number.size()-1; i == 0; i--)
             int_to_return.number.remove(i);
-        this.calculate_sign(minu, int_to_return);
+        this.calculate_sign(subtract, int_to_return);
         return int_to_return;
     }
 
