@@ -20,7 +20,10 @@ public class BigInt implements Comparable
     public BigInt(String number)
     {
         this.check_number(number);
-        this.set_sign(number.charAt(0));
+        if (number.equals(""))
+            this.sign = POSITIVE;
+        else
+            this.set_sign(number.charAt(0));
         this.set_number(number);
     }
 
@@ -105,11 +108,13 @@ public class BigInt implements Comparable
             else
                 second = 1;
             sum = first - second;
+            if (first == 0 && sum < 0)
+                sum = sum + 10;
             if (sum < 0)
                 sum *= NEGATIVE;
             int_to_return.number.add(sum);
         }
-        for (int i=int_to_return.number.size()-1; i == 0; i--)
+        for (int i=int_to_return.number.size()-1; int_to_return.number.get(i) == 0; i--)
             int_to_return.number.remove(i);
         this.calculate_sign(subtract, int_to_return);
         return int_to_return;
@@ -171,13 +176,8 @@ public class BigInt implements Comparable
 
     public BigInt divide(BigInt divider)
     {
-        if (divider.number.size() ==1 && divider.number.get(0) == 0)
-            new ArithmeticException();
-
-        BigInt int_to_return = new BigInt();
-
-
-        return int_to_return;
+        // didnt have enough time to create. sorry
+        return null;
     }
 
     private void set_sign(char potential_sign)
@@ -192,12 +192,21 @@ public class BigInt implements Comparable
 
     private void calculate_sign(BigInt number, BigInt int_to_return)
     {
-        if (this.compareTo(number) > 0)
+        if (this.number.size() > number.number.size())
+        {
             int_to_return.sign = this.get_sign();
-        if (this.compareTo(number) < 0)
+            return;
+        }
+        if (this.number.size() < number.number.size())
+        {
             int_to_return.sign = number.get_sign();
-        if (this.compareTo(number) == 0)
+            return;
+        }
+
+        if (this.number.get(this.number.size()-1) - number.number.get(number.number.size()-1) >= 0)
             int_to_return.sign = POSITIVE;
+        else
+            int_to_return.sign = NEGATIVE;
     }
 
     public int get_sign()
@@ -224,7 +233,11 @@ public class BigInt implements Comparable
     private void set_number(String number)
     {
         for (int i=number.length()-1; i>=0; i--)
-            this.number.add((int)number.charAt(i));
+        {
+            if (number.charAt(i) == '-')
+                continue;
+            this.number.add((int)number.charAt(i) - '0');
+        }
     }
 
     @Override
@@ -244,8 +257,8 @@ public class BigInt implements Comparable
         String str = "";
         if (this.get_sign() == NEGATIVE)
             str = "-";
-        for (int i=this.number.size(); i>0; i--)
-            str += this.number.get(i).toString();
+        for (int i=this.number.size()-1; i>=0; i--)
+            str += String.format("%d",this.number.get(i));
         return str;
     }
 
